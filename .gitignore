@@ -1,0 +1,9 @@
+*.pyc
+*~
+*.kate-swp
+__pycache__/*
+*.sass-cache/
+*.swp
+*.sqlite3
+*.map
+celerybeat-schedule

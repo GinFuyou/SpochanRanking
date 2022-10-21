@@ -1,0 +1,33 @@
+<!DOCTYPE html> 
+<html lang="ru">
+<head>
+    {% load staticfiles %}
+    <meta charset="utf-8" />
+    <meta name="document-state" content="dynamic" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="{% spaceless %}{% block keywords %}{% endblock %}{% endspaceless %}" />
+    <meta name="description" content="{% block description %}{% spaceless %}
+        {% endspaceless %}{% endblock description %}" />
+    <link rel="icon" sizes="16x16" type="image/png" href="{% static 'favicon.png' %}" />
+    <title>{% block pagetitle %}NEW SITE{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'main.css' %}" />
+    <noscript><link rel="stylesheet" href="{{ FONTAWESOME_CDN.0 }}" integrity="{{ FONTAWESOME_CDN.1 }}" crossorigin="anonymous"></noscript>
+    {% block head_extra %}{% endblock %}
+    <script src="{{ FONTAWESOME_JS_CDN.0 }}" integrity="{{ FONTAWESOME_JS_CDN.1 }}" crossorigin="anonymous"></script>
+    <script src="{{ JQUERY_CDN }}" integrity="{{ JQUERY_HASH }}" crossorigin="anonymous"></script>
+    {% block head_scripts %}{% endblock %}
+    <script src="{% static 'js/kern.combo.js' %}"></script>
+</head>
+
+<body {% block body_attrs %}{% endblock body_attrs %}>
+    <main>
+        {% block main %}<h1>Main block not extended</h1>{% endblock %}
+    </main>
+
+</body>
+    {% comment %}{% localize off %}{% endcomment %}
+    {% block document_end %}
+    {% endblock document_end %}
+    {% comment %}{% endlocalize %}{% endcomment %}
+</html>

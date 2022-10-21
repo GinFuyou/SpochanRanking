@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "spochan_ranking"
+version = "0.10.1-a1"
+description = ""
+authors = ["Gin Fuyou"]
+
+[tool.poetry.dependencies]
+python = "^3.8.5"
+Django = "4.1.*"
+django-classy-settings = "3.*"
+django-debug-toolbar = "^3.7.0"
+psycopg2-binary = "2.*"
+Celestia = {git = "https://gitlab.com/GinFuyou/django-celestia.git", branch = "master"}
+toml = "^0.10.2"
+
+[tool.poetry.extras]
+
+[tool.poetry.dev-dependencies]
+isort = "5.*"
+pylint-django = "^2.5.3"
+pre-commit = "^2.19.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

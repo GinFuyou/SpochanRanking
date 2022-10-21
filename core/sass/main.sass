@@ -1,0 +1,68 @@
+$prime_bg_colour: #F7F7FA
+$main_page_width: 1024px
+
+@import '_pythonvars.sass'
+@import 'sass-prefix-mixins/scss/prefixes'
+
+body
+    width: 100%
+    min-height: 100%
+    position: relative
+    font-size: 16px
+    background-color: $prime_bg_colour
+
+p
+    margin: 0
+    font-size: 1em
+    line-height: 1.5em
+
+.mrg
+    margin: 8px 0
+
+main
+    width: $main_page_width
+    margin: auto
+    padding: 32px 0px
+
+button
+    margin: 0.2em !important
+
+
+.flex-con
+    +vp-flexbox()
+    +vp-justify-content(space-around)
+    +vp-flex-wrap(wrap)
+
+.cnt
+    text-align: center
+
+.hdn
+    display: none
+
+.clr
+    clear: both
+
+
+footer
+    &>div:first-child // top div of footer with links and share buttons. Next is footer_understripe
+        padding: 20px 16px 16px
+        width: 100%
+    & .right // right float div in footer
+        float: right
+        display: inline-block
+
+.footer_understripe
+    width: 100%
+    padding: 8px 16px
+    background-color: #323232
+    color: $prime_bg_colour
+    font-weight: 600
+    span:nth-child(2)
+        float: right
+
+$django_shadow_dist: 1px
+$django_shadow_colour: black
+
+.django
+    color: rgb(68, 183, 139)
+    text-shadow: 1px 1px $django_shadow_dist $django_shadow_colour, -1px -1px $django_shadow_dist $django_shadow_colour, 1px -1px $django_shadow_dist $django_shadow_colour, -1px 1px $django_shadow_dist $django_shadow_colour, -1px 0px $django_shadow_dist $django_shadow_colour, 1px 0px $django_shadow_dist $django_shadow_colour
