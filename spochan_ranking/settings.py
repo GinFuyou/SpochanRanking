@@ -74,31 +74,40 @@ class Settings(BaseSettings):
 
     INTERNAL_IPS = ['127.0.0.1', '192.168.2.49']
     ALLOWED_HOSTS = []
-    INSTALLED_APPS = [
-        'core',
-        'celestia',
-        'django.contrib.admin',
-        'django.contrib.auth',
-        'django.contrib.contenttypes',
-        'django.contrib.sessions',
-        'django.contrib.messages',
-        'django.contrib.sites',  # needed for sitemap framework
-        'debug_toolbar' if DEBUG else None,
-        'django.contrib.staticfiles', ]  # .filter()
+
+    def INSTALLED_APPS(self):
+        apps = (
+            'core',
+            'celestia',
+            'django.contrib.admin',
+            'django.contrib.auth',
+            'django.contrib.contenttypes',
+            'django.contrib.sessions',
+            'django.contrib.messages',
+            'django.contrib.sites',  # needed for sitemap framework
+            'debug_toolbar' if self.DEBUG else None,
+            'django.contrib.staticfiles',
+        )
+        return [i for i in apps if i]
 
 
 
-    MIDDLEWARE = [
-        'django.middleware.security.SecurityMiddleware',
-        'django.contrib.sessions.middleware.SessionMiddleware',
-        'debug_toolbar.middleware.DebugToolbarMiddleware' if DEBUG else None,
-        'django.middleware.common.CommonMiddleware',
-        'django.middleware.csrf.CsrfViewMiddleware',
-        'django.contrib.auth.middleware.AuthenticationMiddleware',
-        'django.contrib.messages.middleware.MessageMiddleware',
-        'django.middleware.clickjacking.XFrameOptionsMiddleware', ]  # .filter()
 
-    # LOCALE_PATHS = [self.BASE_DIR / 'locale', ]
+    def MIDDLEWARE(self):
+        middlewares = (
+            'django.middleware.security.SecurityMiddleware',
+            'django.contrib.sessions.middleware.SessionMiddleware',
+            'debug_toolbar.middleware.DebugToolbarMiddleware' if self.DEBUG else None,
+            'django.middleware.common.CommonMiddleware',
+            'django.middleware.csrf.CsrfViewMiddleware',
+            'django.contrib.auth.middleware.AuthenticationMiddleware',
+            'django.contrib.messages.middleware.MessageMiddleware',
+            'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        )
+        return [i for i in middlewares if i]
+
+    # def LOCALE_PATHS(self):
+    #     return [self.BASE_DIR / 'locale', ]
 
     """
     CACHES = {
@@ -109,12 +118,13 @@ class Settings(BaseSettings):
 
     SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
     """
-
+    """
     SETTING_CONTEXT_NAMES = (
         'PROJECT_VERSION',
         'SCRIPTS',
         'STYLES'
     )
+    """
 
     TEMPLATES = [
         {
@@ -127,18 +137,21 @@ class Settings(BaseSettings):
                     'django.template.context_processors.request',
                     'django.contrib.auth.context_processors.auth',
                     'django.contrib.messages.context_processors.messages',
-                    'celestia.context_processors.setting', 
+                    # 'celestia.context_processors.setting',
                 ],
             },
-        },]
+        },
+    ] # END TEMPLATES
 
 
 
-    WEB_ROOT = Path("/Setsuna/web/spochan_ranking/")
+    WEB_ROOT = denv(Path("/Setsuna/web/spochan_ranking/"))  # arg is default for env var
 
-    STATIC_ROOT = WEB_ROOT / 'static/'
+    def STATIC_ROOT(self):
+        return self.WEB_ROOT / 'static/'
 
-    MEDIA_ROOT = WEB_ROOT / 'media/'
+    def MEDIA_ROOT(self):
+        return self.WEB_ROOT / 'media/'
 
     STATIC_URL = '/static/'
 
@@ -152,10 +165,11 @@ class Settings(BaseSettings):
     JQUERY_CDN = "//code.jquery.com/jquery-2.2.4.min.js"
     JQUERY_HASH = "sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
 
-    DATABASES = {'default':
+    def DATABASES(self):
+        return {'default':
                     {
                         'ENGINE': 'django.db.backends.sqlite3',
-                        'NAME': BASE_DIR / 'spochan_ranking.sqlite3',
+                        'NAME': self.BASE_DIR / 'spochan_ranking.sqlite3',
                     }
                 }
 
@@ -166,7 +180,7 @@ class Settings(BaseSettings):
 
 class DevSettings(Settings):
 
-    WEB_ROOT = Path("/Setsuna/web/spochan_ranking/")
+    pass
 
 
 class ProdSettings(Settings):
@@ -177,10 +191,13 @@ class ProdSettings(Settings):
 
     DATABASES = {
         'default':
-                {'ENGINE': 'django.db.backends.postgresql',
-                 'NAME': 'spochan_ranking',}, }
+            {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': 'spochan_ranking',
+            },
+    }  # END DATABASES
 
-    WEB_ROOT = Path("/srv/web/spochan_ranking/")
+    WEB_ROOT = denv(Path("/srv/web/spochan_ranking/"))
 
 
 # Apply CBS 3+
@@ -191,5 +208,5 @@ __getattr__, __dir__ = BaseSettings.use()
 
 DJANGO_MODE = environ.get('DJANGO_MODE', 'Dev')
 
-print(f"{PROJECT_NAME.replace('_', '')} v.{PROJECT_VERSION} on python {python_version()} [{DJANGO_MODE}] DEBUG=N/A")  # TODO add DEBUG
+print(f"{PROJECT_NAME.replace('_', '')} v.{PROJECT_VERSION} on python {python_version()} [{DJANGO_MODE}] DEBUG=N/A")  # TODO add .select() when implemented
 
