@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.contrib.auth.models import UserManager, PermissionsMixin, AbstractBaseUser
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.mail import send_mail
 from django.db import models
@@ -12,7 +12,7 @@ class CoreUserManager(UserManager):
 
     #  def _create_user(self, username, email, password, **extra_fields):
     def username_from_email(self, email, obfuscate_with="*"):
-        return email  # TODO implement obfuscation
+        return email  # TODO implement obfuscation x
 
     def create_user(self, email, username=None, password=None, **extra_fields):
         extra_fields.setdefault("is_staff", False)
