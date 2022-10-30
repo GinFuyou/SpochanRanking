@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 """
 Django settings for spochan_ranking project.
 
@@ -9,13 +8,11 @@ Custom template ver.4.1.0-1-a3
 # Using django-classy-settings 3.x
 # https://django-classy-settings.readthedocs.io
 """
-
-from platform import python_version
-import warnings
 from os import environ
 from pathlib import Path
+from platform import python_version
 
-from cbs import BaseSettings, env
+from cbs import env, BaseSettings
 from django import get_version as django_version
 from django.utils.translation import gettext_lazy as _
 
@@ -40,15 +37,15 @@ LANGUAGE_CODE = 'ru-RU'
 LANGUAGES = [('en-UK', _('English')),
              ('ru-RU', _('Russian')), ]
 
-AUTH_USER_MODEL = 'core.User'
+AUTH_USER_MODEL = 'core.CoreUser'
 LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = '/'
 
 AUTH_PASSWORD_VALIDATORS = [
-    { 'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
-    { 'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', },
-    { 'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator', },
-    { 'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator', }, ]
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator', }, ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -89,9 +86,6 @@ class Settings(BaseSettings):
             'django.contrib.staticfiles',
         )
         return [i for i in apps if i]
-
-
-
 
     def MIDDLEWARE(self):
         middlewares = (
@@ -141,9 +135,7 @@ class Settings(BaseSettings):
                 ],
             },
         },
-    ] # END TEMPLATES
-
-
+    ]  # END TEMPLATES
 
     WEB_ROOT = denv(Path("/Setsuna/web/spochan_ranking/"))  # arg is default for env var
 
@@ -158,10 +150,10 @@ class Settings(BaseSettings):
     FONTAWESOME_VERSION = "v5.8.2"
     FONTAWESOME_CDN = (
         f"https://use.fontawesome.com/releases/{FONTAWESOME_VERSION}/css/all.css",
-        "sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"   )
+        "sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay", )
     FONTAWESOME_JS_CDN = (
         f"https://use.fontawesome.com/releases/{FONTAWESOME_VERSION}/js/all.js",
-        "sha384-DJ25uNYET2XCl5ZF++U8eNxPWqcKohUUBUpKGlNLMchM7q4Wjg2CUpjHLaL8yYPH"   )
+        "sha384-DJ25uNYET2XCl5ZF++U8eNxPWqcKohUUBUpKGlNLMchM7q4Wjg2CUpjHLaL8yYPH", )
     JQUERY_CDN = "//code.jquery.com/jquery-2.2.4.min.js"
     JQUERY_HASH = "sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
 
@@ -174,12 +166,7 @@ class Settings(BaseSettings):
                 }
 
 
-
-
-
-
 class DevSettings(Settings):
-
     pass
 
 
@@ -208,5 +195,5 @@ __getattr__, __dir__ = BaseSettings.use()
 
 DJANGO_MODE = environ.get('DJANGO_MODE', 'Dev')
 
-print(f"{PROJECT_NAME.replace('_', '')} v.{PROJECT_VERSION} on python {python_version()} [{DJANGO_MODE}] DEBUG=N/A")  # TODO add .select() when implemented
-
+print(f"{PROJECT_NAME.replace('_', '')} v.{PROJECT_VERSION}"
+      F" on python {python_version()} [{DJANGO_MODE}] DEBUG=N/A")  # TODO add .select() when implemented
