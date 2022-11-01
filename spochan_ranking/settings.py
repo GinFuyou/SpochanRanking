@@ -76,8 +76,9 @@ class Settings(BaseSettings):
         apps = (
             'core.apps.CoreConfig',
             'certification.apps.CertConfig',
-            'chanbara.apps.ChanbaraConfig',
+            # 'chanbara.apps.ChanbaraConfig',
             'celestia',
+            'simple_history',
             'django.contrib.admin',
             'django.contrib.auth',
             'django.contrib.contenttypes',
@@ -99,6 +100,7 @@ class Settings(BaseSettings):
             'django.contrib.auth.middleware.AuthenticationMiddleware',
             'django.contrib.messages.middleware.MessageMiddleware',
             'django.middleware.clickjacking.XFrameOptionsMiddleware',
+            # 'simple_history.middleware.HistoryRequestMiddleware',
         )
         return [i for i in middlewares if i]
 

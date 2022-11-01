@@ -10,10 +10,13 @@ class SportDiscipline(models.Model):
     class Meta:
         pass
 
-    id = models.AutoField(primary_key=True)  # don't use BigAutoField where it's not needed
+    id = models.SmallAutoField(primary_key=True)  # don't use BigAutoField where it's not needed
 
     name = models.CharField(max_length=128, unique=True)
     slug = models.SlugField(max_length=128, unique=True)
     # is_certifiable
     priority = models.SmallIntegerField(default=200)
     description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name

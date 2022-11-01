@@ -4,6 +4,9 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
+# from simple_history.admin import SimpleHistoryAdmin
+from .models import Profile
+
 
 @admin.register(get_user_model())
 class CoreUserAdmin(UserAdmin):
@@ -32,3 +35,9 @@ class CoreUserAdmin(UserAdmin):
             },
         ),
     )
+
+
+@admin.register(Profile)
+# class ProfileAdmin(SimpleHistoryAdmin):
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ['get_full_name', 'last_name', 'first_name', 'date_of_birth']

@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
-# from django.conf import settings
+from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+
+# from simple_history.models import HistoricalRecords
 
 
 class CoreUserManager(UserManager):
@@ -100,11 +102,11 @@ class CoreUser(AbstractBaseUser, PermissionsMixin):
 
 
 class Profile(models.Model):
-    """ implements
+    """ implements simple data about person
     """
     _name_length = 512
 
-    # owner = models.OneToOneField(settings.AUTH_USER_MODEL, blank=True, null=True)
+    owner = models.OneToOneField(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.PROTECT)
 
     first_name = models.CharField(_("first name"), max_length=_name_length, db_index=True)
     last_name = models.CharField(_("last name"), max_length=_name_length, db_index=True)
@@ -112,18 +114,18 @@ class Profile(models.Model):
 
     date_of_birth = models.DateField(blank=True, null=True)
 
-
-'''
-    # fields moved to profile
+    # history = HistoricalRecords()
 
     def get_full_name(self):
         """
         Return the first_name plus the last_name, with a space in between.
         """
-        full_name = "%s %s" % (self.first_name, self.last_name)
+        full_name = f"{self.first_name} {self.last_name}"
         return full_name.strip()
 
-    def get_short_name(self):
-        """Return the short name for the user."""
-        return self.first_name
-'''
+    def __str__(self):
+        full_name = self.get_full_name()
+        if self.owner:
+            return f"{full_name} ({self.owner.email})"
+        else:
+            return full_name

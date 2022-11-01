@@ -2,6 +2,8 @@ from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+# from simple_history.models import HistoricalRecords
+
 
 class AbstractCertificationRecord(models.Model):
     """ implements base certification fields and methods
@@ -9,7 +11,7 @@ class AbstractCertificationRecord(models.Model):
     class Meta:
         abstract = True
 
-    # owner = models.OneToOneField("core.Profile")
+    owner = models.OneToOneField("core.Profile", on_delete=models.PROTECT)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     # updated_by = models.ForeignKey(settings.AUTH_USER_MODEL)
@@ -54,6 +56,11 @@ class SportCertificationRecord(AbstractCertificationRecord):
         verbose_name_plural = _("sport certification records")
         db_table = "certification_sport_record"
 
-    level = models.SmallIntegerField(choices=SportRanks.choices, default=SportRanks.kyu_10)
+    level = models.SmallIntegerField(choices=SportRanks.choices, default=SportRanks.kyu_10, db_index=True)
 
     discipline = models.ForeignKey('chanbara.SportDiscipline', related_name='certs', on_delete=models.PROTECT)
+
+    # history = HistoricalRecords()
+
+    def __str__(self):
+        return f"{self.owner.get_full_name()} - {self.discipline} {self.get_level_display()}"
