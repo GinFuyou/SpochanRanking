@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.mail import send_mail
@@ -40,7 +41,12 @@ class CoreUserManager(UserManager):
 
 class CoreUser(AbstractBaseUser, PermissionsMixin):
     """
+    implements basic auth
     """
+    class Meta:
+        verbose_name = _("user")
+        verbose_name_plural = _("users")
+        db_table = "core_user"
 
     username_validator = UnicodeUsernameValidator()
 
@@ -78,10 +84,6 @@ class CoreUser(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 
-    class Meta:
-        verbose_name = _("user")
-        verbose_name_plural = _("users")
-
     def clean(self):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
@@ -97,11 +99,22 @@ class CoreUser(AbstractBaseUser, PermissionsMixin):
             return self.email
 
 
+class Profile(models.Model):
+    """ implements
+    """
+    _name_length = 512
+
+    # owner = models.OneToOneField(settings.AUTH_USER_MODEL, blank=True, null=True)
+
+    first_name = models.CharField(_("first name"), max_length=_name_length, db_index=True)
+    last_name = models.CharField(_("last name"), max_length=_name_length, db_index=True)
+    middle_name = models.CharField(_("middle name"), max_length=_name_length, blank=True)
+
+    date_of_birth = models.DateField(blank=True, null=True)
+
+
 '''
     # fields moved to profile
-
-    first_name = models.CharField(_("first name"), max_length=150, blank=True)
-    last_name = models.CharField(_("last name"), max_length=150, blank=True)
 
     def get_full_name(self):
         """

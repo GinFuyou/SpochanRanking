@@ -12,7 +12,7 @@ from os import environ
 from pathlib import Path
 from platform import python_version
 
-from cbs import env, BaseSettings
+from cbs import BaseSettings, env
 from django import get_version as django_version
 from django.utils.translation import gettext_lazy as _
 
@@ -74,7 +74,9 @@ class Settings(BaseSettings):
 
     def INSTALLED_APPS(self):
         apps = (
-            'core',
+            'core.apps.CoreConfig',
+            'certification.apps.CertConfig',
+            'chanbara.apps.ChanbaraConfig',
             'celestia',
             'django.contrib.admin',
             'django.contrib.auth',
