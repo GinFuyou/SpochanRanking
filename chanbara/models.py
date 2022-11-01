@@ -12,7 +12,7 @@ class SportDiscipline(models.Model):
 
     id = models.AutoField(primary_key=True)  # don't use BigAutoField where it's not needed
 
-    name = models.CharFiels(max_length=128, unique=True)
+    name = models.CharField(max_length=128, unique=True)
     slug = models.SlugField(max_length=128, unique=True)
     # is_certifiable
     priority = models.SmallIntegerField(default=200)

@@ -56,4 +56,4 @@ class SportCertificationRecord(AbstractCertificationRecord):
 
     level = models.SmallIntegerField(choices=SportRanks.choices, default=SportRanks.kyu_10)
 
-    discipline = models.ForeignKey('chanbara.SportDisciplines', related_name='certs', on_delete=models.PROTECT)
+    discipline = models.ForeignKey('chanbara.SportDiscipline', related_name='certs', on_delete=models.PROTECT)
