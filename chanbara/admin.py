@@ -6,4 +6,4 @@ from chanbara.models import SportDiscipline
 # Register your models here.
 @admin.register(SportDiscipline)
 class SportDisciplineAdmin(admin.ModelAdmin):
-    pass
+    prepopulated_fields = {"slug": ("name", )}

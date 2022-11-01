@@ -13,7 +13,6 @@ from django.utils.translation import gettext_lazy as _
 class CoreUserManager(UserManager):
     """ changed to use email is main id field """
 
-    #  def _create_user(self, username, email, password, **extra_fields):
     def username_from_email(self, email, obfuscate_with="*"):
         return email  # TODO implement obfuscation x
 

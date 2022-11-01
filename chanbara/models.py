@@ -14,7 +14,8 @@ class SportDiscipline(models.Model):
 
     name = models.CharField(max_length=128, unique=True)
     slug = models.SlugField(max_length=128, unique=True)
-    # is_certifiable
+    is_certifiable = models.BooleanField(default=False)
+
     priority = models.SmallIntegerField(default=200)
     description = models.TextField(blank=True)
 

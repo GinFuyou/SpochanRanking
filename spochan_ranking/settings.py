@@ -47,7 +47,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator', },
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator', }, ]
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 WSGI_APPLICATION = 'spochan_ranking.wsgi.application'
 
@@ -76,9 +76,9 @@ class Settings(BaseSettings):
         apps = (
             'core.apps.CoreConfig',
             'certification.apps.CertConfig',
-            # 'chanbara.apps.ChanbaraConfig',
+            'chanbara.apps.ChanbaraConfig',
             'celestia',
-            'simple_history',
+            # 'simple_history',
             'django.contrib.admin',
             'django.contrib.auth',
             'django.contrib.contenttypes',

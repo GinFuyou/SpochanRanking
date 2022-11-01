@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -18,8 +20,8 @@ class AbstractCertificationRecord(models.Model):
     # create_datetime = models.DateTimeField(auto_now_add=True)
     update_datetime = models.DateTimeField(auto_now=True)
 
-    issued_date = models.DateField()
-    issued_by = models.CharField(max_length=768)
+    issued_date = models.DateField(default=date.today)
+    # issued_by = models.CharField(max_length=768)
 
     # signed_hash = models.CharField()
     # signing_key_id
