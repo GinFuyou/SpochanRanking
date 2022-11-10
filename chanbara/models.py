@@ -1,7 +1,8 @@
 # from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
-
-# from django.utils.translation import gettext_lazy as _
+from django.db.models import Q
+from django.utils.translation import gettext_lazy as _
 
 
 class SportDiscipline(models.Model):
@@ -40,9 +41,34 @@ class CompGroup(models.Model):
             models.UniqueConstraint(fields=('competition', 'name'), name='unique_group_name_for_competition'),
         ]
 
-    competition = models.ForeignKey('Competition')
+    competition = models.ForeignKey('Competition', on_delete=models.CASCADE)
     name = models.CharField(max_length=256)
-    # grand_champion = models.ForeignKey(....)
+    participants = models.ManyToManyField("core.Profile", through="CompGroupParticipation")
+    disciplines = models.ManyToManyField("SportDiscipline", related_name="+", db_table='chanbara_comp_group_discipline')
+
+
+class CompGroupParticipation(models.Model):
+    class Meta:
+        db_table = 'chanbara_comp_group_perticipation'
+        constraints = [
+            models.UniqueConstraint(fields=('group', 'profile', 'discipline'), name='unique_comp_group_part_per_discipline'),
+            models.UniqueConstraint(
+                fields=('group', ),
+                condition=Q(is_grandchampion=True),
+                name='unique_grand_champion_for_group'
+            ),
+        ]
+
+    group = models.ForeignKey("CompGroup", on_delete=models.PROTECT)
+    profile = models.ForeignKey("core.Profile", related_name='comp_participations', on_delete=models.PROTECT)
+    discipline = models.ForeignKey('SportDiscipline', related_name="+", on_delete=models.PROTECT)
+
+    place = models.PositiveSmallIntegerField(default=0)
+    is_grandchampion = models.BooleanField(default=False)
+
+    def clean(self):  # clean_discipline?
+        if self.discipline not in self.group.disciplines.all():
+            raise ValidationError(_('Discipline is not in the list of group selected disciplines.'))
 
 
 """
