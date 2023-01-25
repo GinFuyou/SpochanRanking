@@ -5,6 +5,20 @@ from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 
+class GroupType(models.Model):
+    class Meta:
+        pass
+
+    id = models.SmallAutoField(primary_key=True)  # don't use BigAutoField where it's not needed
+    name = models.CharField(max_length=128, unique=True)
+
+    is_primary = models.BooleanField(default=False, blank=True)
+    is_junior = models.BooleanField(default=False, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
 class SportDiscipline(models.Model):
     """ implements sport disciplines like weapon categories and kihon-dosa
     """
@@ -25,6 +39,9 @@ class SportDiscipline(models.Model):
 
 
 class Competition(models.Model):
+    class Meta:
+        abstract = True
+
     id = models.AutoField(primary_key=True)
 
     name = models.CharField(max_length=512)
@@ -37,18 +54,20 @@ class Competition(models.Model):
 
 class CompGroup(models.Model):
     class Meta:
+        abstract = True
         constraints = [
             models.UniqueConstraint(fields=('competition', 'name'), name='unique_group_name_for_competition'),
         ]
 
     competition = models.ForeignKey('Competition', on_delete=models.CASCADE)
-    name = models.CharField(max_length=256)
+    # typ = models.ForeignKey('Competition', on_delete=models.CASCADE)  # TODO Think about this
     participants = models.ManyToManyField("core.Profile", through="CompGroupParticipation")
     disciplines = models.ManyToManyField("SportDiscipline", related_name="+", db_table='chanbara_comp_group_discipline')
 
 
 class CompGroupParticipation(models.Model):
     class Meta:
+        abstract = True
         db_table = 'chanbara_comp_group_perticipation'
         constraints = [
             models.UniqueConstraint(fields=('group', 'profile', 'discipline'), name='unique_comp_group_part_per_discipline'),

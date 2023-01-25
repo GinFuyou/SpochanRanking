@@ -86,6 +86,7 @@ class Settings(BaseSettings):
             'django.contrib.messages',
             'django.contrib.sites',  # needed for sitemap framework
             'debug_toolbar' if self.DEBUG else None,
+            'django_extensions' if self.DEBUG else None,
             'django.contrib.staticfiles',
         )
         return [i for i in apps if i]
@@ -200,4 +201,4 @@ __getattr__, __dir__ = BaseSettings.use()
 DJANGO_MODE = environ.get('DJANGO_MODE', 'Dev')
 
 print(f"{PROJECT_NAME.replace('_', '')} v.{PROJECT_VERSION}"
-      F" on python {python_version()} [{DJANGO_MODE}] DEBUG=N/A")  # TODO add .select() when implemented
+      f" on python {python_version()} [{DJANGO_MODE}] DEBUG=N/A")  # TODO add .select() when implemented

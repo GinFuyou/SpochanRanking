@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from random import randint
+
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
@@ -6,8 +8,12 @@ from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from unidecode import unidecode
 
 # from simple_history.models import HistoricalRecords
+DIGITS = {c: i for i, c in enumerate('abcdefghijklmnopqrstuvwxyz'.upper())}
+BASE_YEAR = timezone.datetime(1950, 1, 1)
+ENC_BASE = len(DIGITS)
 
 
 class CoreUserManager(UserManager):
@@ -79,7 +85,7 @@ class CoreUser(AbstractBaseUser, PermissionsMixin):
     )
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
 
-    objects = UserManager()
+    objects = CoreUserManager()
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
@@ -100,6 +106,15 @@ class CoreUser(AbstractBaseUser, PermissionsMixin):
             return self.email
 
 
+class SportClub(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=128)
+    location = models.TextField(max_length=1024)
+
+    def __str__(self):
+        return self.name
+
+
 class Profile(models.Model):
     """ implements simple data about person
     """
@@ -113,7 +128,34 @@ class Profile(models.Model):
 
     date_of_birth = models.DateField(blank=True, null=True)
 
-    # history = HistoricalRecords()
+    club = models.ForeignKey("SportClub", blank=True, null=True, on_delete=models.SET_NULL)
+    primary_group = models.ForeignKey("chanbara.GroupType", blank=True, null=True, on_delete=models.SET_NULL,
+                                      limit_choices_to={"is_primary": True})
+    # history = HistoricalRecords
+
+    def encode_year_of_birth(self):
+        year = self.date_of_birth or BASE_YEAR
+        year_offset = year.year - BASE_YEAR.year
+
+        number = year_offset // ENC_BASE
+        remainder = year_offset % ENC_BASE
+        encoded_offset = [chr(remainder + ord('A'))]
+        while number > 0:
+            year_offset = number
+            number = year_offset // ENC_BASE
+            remainder = year_offset % ENC_BASE
+            encoded_offset.insert(0, chr(remainder + ord('A')))
+        return "".join(encoded_offset)
+
+    def make_profile_id(self):
+        str_id = unidecode(self.first_name)[0] if self.first_name else 'X'
+        str_id += unidecode(self.last_name)[0] if self.last_name else 'X'
+        num = randint(0, 9999)
+        return f"{str_id}{num:0>4}{self.encode_year_of_birth()}"
+
+    def parse_encoded_year(self, number, base=len(DIGITS)):
+        number = reversed(number.upper())
+        return BASE_YEAR.year + sum(DIGITS[digit] * (base ** i) for i, digit in enumerate(number))
 
     def get_full_name(self):
         """
