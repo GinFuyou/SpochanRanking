@@ -12,7 +12,7 @@ from unidecode import unidecode
 
 # from simple_history.models import HistoricalRecords
 DIGITS = {c: i for i, c in enumerate('abcdefghijklmnopqrstuvwxyz'.upper())}
-BASE_YEAR = timezone.datetime(1950, 1, 1)
+BASE_YEAR = timezone.datetime(1920, 1, 1)
 ENC_BASE = len(DIGITS)
 
 

@@ -2,14 +2,24 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import gettext_lazy as _
 
 # from simple_history.admin import SimpleHistoryAdmin
 from .models import Profile
 
 
+class CoreUserCreationForm(UserCreationForm):
+
+    class Meta(UserCreationForm.Meta):
+        model = get_user_model()
+        fields = UserCreationForm.Meta.fields + ('email', )
+
+
 @admin.register(get_user_model())
 class CoreUserAdmin(UserAdmin):
+    add_form = CoreUserCreationForm
+
     list_display = ['admin_display_name', 'email', 'is_staff', 'is_active', 'date_joined']
     fieldsets = (
         (None, {"fields": ("username", "email", "password")}),
@@ -35,6 +45,17 @@ class CoreUserAdmin(UserAdmin):
             },
         ),
     )
+
+    def get_form(self, request, obj=None, **kwargs):
+        """
+        Use special form during user creation
+        """
+        defaults = {}
+        if obj is None:
+            form_class = self.add_form
+        else:
+            form_class = super().get_form(request, obj, **defaults)
+        return form_class
 
 
 @admin.register(Profile)
