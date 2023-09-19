@@ -23,6 +23,7 @@ from . import __version__
 
 denv = env['SPOCHAN_RANKING_']
 
+print(f"{environ.get('DJANGO_SETTINGS_MODULE')}")
 
 PROJECT_VERSION = __version__
 PROJECT_NAME = "Spochan_Ranking"

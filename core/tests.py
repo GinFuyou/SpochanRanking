@@ -31,6 +31,7 @@ class CoreTestCase(TestCase):
         (ValidationError, {'email': 'test42@example.com', 'username': "User 42"}),
         (ValidationError, {'email': 'invalidmail'}),
         (False, {'email': 'test02@example.com', 'username': "User_42"}),
+        (ValidationError, {'email': 'test02@example.com', 'username': "UserWithSameEmail"}),  # repeat email
     ]
 
     def setUp(self):
@@ -39,12 +40,14 @@ class CoreTestCase(TestCase):
     def _create_user(self, **kwargs):
         user = None
         with transaction.atomic():
-            user = CoreUser.objects.create_user(**kwargs)
+            user = CoreUser(**kwargs)
+            user.set_password("dummy_password_#$@!*()")
             user.full_clean()
+            user.save()
         return user
 
     def test_core_models(self):
-        print("\n --- Testing core users")
+        print("\n --- Testing core models")
         user = None
         for exception_class, creds in self.TEST_CREDS:
             pprint(creds)
@@ -61,6 +64,12 @@ class CoreTestCase(TestCase):
         pprint(CoreUser.objects.all())
         self.assertEqual(count, len([1 for e, v in self.TEST_CREDS if e is False]))
 
+        # test superuser
+        ADMIN_EMAIL = "test_admin@example"
+        CoreUser.objects.create_superuser(email=ADMIN_EMAIL, password="test_pass_9yAj")
+        user = CoreUser.objects.get(email=ADMIN_EMAIL)
+        print(f"superuser: {user.admin_display_name()}")
+
         # create clubs
         club = SportClub(name='Test club', location='Test, St. Petersburg')
         club.full_clean()
@@ -76,6 +85,7 @@ class CoreTestCase(TestCase):
         profile.owner = CoreUser.objects.get(email=self.VALID_USER_EMAIL)
         profile.full_clean()
         profile.save()
+        print(f"profile id: {profile.make_profile_id()}")
 
     def test_admin_core(self):
         print("\n --- Testing core admin")

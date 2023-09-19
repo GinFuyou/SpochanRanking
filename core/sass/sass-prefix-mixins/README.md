@@ -44,10 +44,10 @@ the resulting css will look like
   flex-flow: row wrap;
 }
  ```
- 
+
 ## Mixins
 
 Check the source code to see which mixins exist or help me and update this Readme
- 
+
 ## See also
 * [Bootstrap 4 Backward](https://github.com/JumpLinkNetwork/bootstrap-backward) - Bootstrap 4 Version using sass-autoprefixer to compile bootstrap 4 directly in your project.

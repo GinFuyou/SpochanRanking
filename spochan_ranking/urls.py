@@ -17,4 +17,4 @@ urlpatterns = [
 
 if settings.DEBUG:
     import debug_toolbar
-    urlpatterns.append(path('dj-dt/', include(debug_toolbar.urls)),)
+    urlpatterns.append(path('dj-dt/', include(debug_toolbar.urls)), )

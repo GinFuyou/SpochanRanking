@@ -1,9 +1,14 @@
 from django.contrib import admin
 
-from chanbara.models import SportDiscipline
+from chanbara import models
 
 
 # Register your models here.
-@admin.register(SportDiscipline)
+@admin.register(models.SportDiscipline)
 class SportDisciplineAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name", )}
+
+
+@admin.register(models.GroupType)
+class GroupTypeAdmin(admin.ModelAdmin):
+    list_display = (str, 'is_primary', 'is_junior')
