@@ -89,6 +89,7 @@ class Settings(BaseSettings):
             'debug_toolbar' if self.DEBUG else None,
             'django_extensions' if self.DEBUG else None,
             'django.contrib.staticfiles',
+            'qr_code',
         )
         return [i for i in apps if i]
 

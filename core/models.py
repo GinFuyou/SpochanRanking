@@ -6,6 +6,8 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserM
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.mail import send_mail
 from django.db import models
+from django.template import Context, Template
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from unidecode import unidecode
@@ -152,6 +154,18 @@ class Profile(models.Model):
         str_id += unidecode(self.last_name)[0] if self.last_name else 'X'
         num = randint(0, 9999)
         return f"{str_id}{num:0>4}{self.encode_year_of_birth()}"
+
+    def html_profile_qr(self):
+        code = '{% load qr_code %}{% qr_from_text qr_body size="s" image_format="png" error_correction="m" %}'
+        context = Context({'qr_body': "http://192.168.2.49:8007" + self.get_absolute_url()})
+        html = Template(code).render(context=context)
+        return html
+
+    html_profile_qr.allow_tags = True
+    html_profile_qr.short_description = "Profile QR"
+
+    def get_absolute_url(self):
+        return reverse('admin:core_profile_change', kwargs={'object_id': self.pk})
 
     def parse_encoded_year(self, number, base=len(DIGITS)):
         number = reversed(number.upper())

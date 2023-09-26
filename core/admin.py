@@ -64,6 +64,8 @@ class CoreUserAdmin(UserAdmin):
 # class ProfileAdmin(SimpleHistoryAdmin):
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['get_full_name', 'last_name', 'first_name', 'date_of_birth']
+    readonly_fields = ("html_profile_qr", )
+    fields = ('first_name', 'last_name', 'date_of_birth', 'html_profile_qr')
     autocomplete_fields = ('club', 'owner')
     search_fields = ('first_name', 'last_name', 'middle_name', 'owner__email')
 
