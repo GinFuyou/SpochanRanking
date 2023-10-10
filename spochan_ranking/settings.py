@@ -148,7 +148,7 @@ class Settings(BaseSettings):
 
     SHELL_PLUS_IMPORTS = ["from django.apps import apps"]
 
-    WEB_ROOT = denv(Path("/Setsuna/web/spochan_ranking/"))  # arg is default for env var
+    WEB_ROOT = Path(denv("/Setsuna/web/spochan_ranking/"))  # arg is default for env var
 
     def STATIC_ROOT(self):
         return self.WEB_ROOT / 'static/'
