@@ -63,7 +63,7 @@ class CoreUserAdmin(UserAdmin):
 @admin.register(Profile)
 # class ProfileAdmin(SimpleHistoryAdmin):
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['get_full_name', 'last_name', 'first_name', 'date_of_birth']
+    list_display = ['get_full_name', 'last_name', 'first_name', 'club', 'date_of_birth']
     readonly_fields = ("html_profile_qr", )
     fields = ('first_name', 'last_name', 'date_of_birth', 'html_profile_qr')
     autocomplete_fields = ('club', 'owner')
@@ -72,5 +72,5 @@ class ProfileAdmin(admin.ModelAdmin):
 
 @admin.register(SportClub)
 class SportClubAdmin(admin.ModelAdmin):
-    list_display = (str, 'location')
-    search_fields = ('name', 'location')
+    list_display = (str, 'country', 'locality', 'location')
+    search_fields = ('name', 'location', 'locality')

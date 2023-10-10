@@ -108,13 +108,27 @@ class CoreUser(AbstractBaseUser, PermissionsMixin):
             return self.email
 
 
+class CountryChoicesISO(models.IntegerChoices):
+    """ using ISO 3166-1 numeric for internal code
+        and Alpha-3 for var name
+    """
+    RUS = 643, _("Russian Federation")
+
+
 class SportClub(models.Model):
+
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=128)
-    location = models.TextField(max_length=1024)
+    country = models.PositiveSmallIntegerField(choices=CountryChoicesISO.choices, default=CountryChoicesISO.RUS)
+    locality = models.CharField(max_length=1024, blank=True, default='')
+    locality.help_text = _("City or settlement")
+    location = models.TextField(max_length=1024, blank=True, default='')
 
     def __str__(self):
-        return self.name
+        if self.locality:
+            return f"{self.name} ({self.locality})"
+        else:
+            return self.name
 
 
 class Profile(models.Model):

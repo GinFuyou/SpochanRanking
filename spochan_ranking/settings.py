@@ -21,7 +21,9 @@ from . import __version__
 # from redis import StrictRedis  # for caches
 
 
-denv = env['SPOCHAN_RANKING_']
+ENV_PREFIX = 'SPOCHAN_RANKING_'
+
+denv = env[ENV_PREFIX]
 
 print(f"{environ.get('DJANGO_SETTINGS_MODULE')}")
 
@@ -143,6 +145,8 @@ class Settings(BaseSettings):
             },
         },
     ]  # END TEMPLATES
+
+    SHELL_PLUS_IMPORTS = ["from django.apps import apps"]
 
     WEB_ROOT = denv(Path("/Setsuna/web/spochan_ranking/"))  # arg is default for env var
 
