@@ -148,7 +148,8 @@ class Settings(BaseSettings):
 
     SHELL_PLUS_IMPORTS = ["from django.apps import apps"]
 
-    WEB_ROOT = denv(Path("/Setsuna/web/spochan_ranking/"))  # arg is default for env var
+    WEB_ROOT = denv("/Setsuna/web/spochan_ranking/")  # arg is default for env var
+    WEB_ROOT = Path(str(WEB_ROOT))
 
     def STATIC_ROOT(self):
         return self.WEB_ROOT / 'static/'
@@ -194,9 +195,6 @@ class ProdSettings(Settings):
                 'NAME': 'spochan_ranking',
             },
     }  # END DATABASES
-
-    WEB_ROOT = denv("/srv/web/spochan_ranking/")
-    WEB_ROOT = Path(WEB_ROOT)
 
 
 # Apply CBS 3+
