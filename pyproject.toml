@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "spochan_ranking"
-version = "0.10.4a2"
+version = "0.10.4a3"
 description = ""
 authors = ["Gin Fuyou"]
 

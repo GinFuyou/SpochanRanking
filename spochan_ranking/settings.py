@@ -73,7 +73,7 @@ class Settings(BaseSettings):
     BASE_DIR = Path(__file__).resolve().parent.parent
 
     INTERNAL_IPS = ['127.0.0.1', '192.168.2.49']
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ["spochan.doratoa.net"]
 
     def INSTALLED_APPS(self):
         apps = (
