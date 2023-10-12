@@ -73,7 +73,7 @@ class Settings(BaseSettings):
     BASE_DIR = Path(__file__).resolve().parent.parent
 
     INTERNAL_IPS = ['127.0.0.1', '192.168.2.49']
-    ALLOWED_HOSTS = ["spochan.doratoa.net"]
+    ALLOWED_HOSTS = ["spochan.doratoa.net", '127.0.0.1']
 
     def INSTALLED_APPS(self):
         apps = (
@@ -184,7 +184,7 @@ class DevSettings(Settings):
 
 class ProdSettings(Settings):
     # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-    ALLOWED_HOSTS = ['test.example.com', ]  # WARNING fill in hosts
+    ALLOWED_HOSTS = ['test.example.com']  # WARNING fill in hosts
 
     DEBUG = denv(False)
 

@@ -1,21 +1,17 @@
 # -*- coding: utf-8 -*-
-from random import randint
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.contrib.sites.models import Site
 from django.core.mail import send_mail
 from django.db import models
 from django.template import Context, Template
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from unidecode import unidecode
 
-# from simple_history.models import HistoricalRecords
-DIGITS = {c: i for i, c in enumerate('abcdefghijklmnopqrstuvwxyz'.upper())}
-BASE_YEAR = timezone.datetime(1920, 1, 1)
-ENC_BASE = len(DIGITS)
+from core.personal_chancode import ChanCode
 
 
 class CoreUserManager(UserManager):
@@ -147,32 +143,37 @@ class Profile(models.Model):
     club = models.ForeignKey("SportClub", blank=True, null=True, on_delete=models.SET_NULL)
     primary_group = models.ForeignKey("chanbara.GroupType", blank=True, null=True, on_delete=models.SET_NULL,
                                       limit_choices_to={"is_primary": True})
+
+    chancode = models.CharField(max_length=16, unique=True, null=True, blank=True)
     # history = HistoricalRecords
 
-    def encode_year_of_birth(self):
-        year = self.date_of_birth or BASE_YEAR
-        year_offset = year.year - BASE_YEAR.year
+    def save(self, *args, **kwargs):
+        """ WARNING implement collision handling """
+        if self.chancode is None:
+            chancode = self.make_chancode()
+            if chancode.is_filled:
+                self.chancode = chancode.encode()
+        super().save(*args, **kwargs)
 
-        number = year_offset // ENC_BASE
-        remainder = year_offset % ENC_BASE
-        encoded_offset = [chr(remainder + ord('A'))]
-        while number > 0:
-            year_offset = number
-            number = year_offset // ENC_BASE
-            remainder = year_offset % ENC_BASE
-            encoded_offset.insert(0, chr(remainder + ord('A')))
-        return "".join(encoded_offset)
+    def make_chancode(self):
+        return ChanCode(profile=self)
 
-    def make_profile_id(self):
-        str_id = unidecode(self.first_name)[0] if self.first_name else 'X'
-        str_id += unidecode(self.last_name)[0] if self.last_name else 'X'
-        num = randint(0, 9999)
-        return f"{str_id}{num:0>4}{self.encode_year_of_birth()}"
+    @property
+    def chancode_format(self):
+        if self.chancode:
+            return ChanCode.format_static(self.chancode)
+        else:
+            return "-"
 
     def html_profile_qr(self):
-        code = '{% load qr_code %}{% qr_from_text qr_body size="s" image_format="png" error_correction="m" %}'
-        context = Context({'qr_body': "http://192.168.2.49:8007" + self.get_absolute_url()})
-        html = Template(code).render(context=context)
+        if self.pk:
+            site = Site.objects.latest("id")
+            code = '{% load qr_code %}{% qr_from_text qr_body size="s" image_format="png" error_correction="m" %}'
+            url = f"http://{site.domain}{self.get_absolute_url()}"
+            context = Context({'qr_body': url})
+            html = Template(code).render(context=context)
+        else:
+            html = "QR-code is not available yet"
         return html
 
     html_profile_qr.allow_tags = True
@@ -180,10 +181,6 @@ class Profile(models.Model):
 
     def get_absolute_url(self):
         return reverse('admin:core_profile_change', kwargs={'object_id': self.pk})
-
-    def parse_encoded_year(self, number, base=len(DIGITS)):
-        number = reversed(number.upper())
-        return BASE_YEAR.year + sum(DIGITS[digit] * (base ** i) for i, digit in enumerate(number))
 
     def get_full_name(self):
         """

@@ -105,6 +105,17 @@ files = [
 ]
 
 [[package]]
+name = "checkdigit"
+version = "0.5.0"
+description = "A check digit library for data validation"
+optional = false
+python-versions = ">=3.7,<4.0"
+files = [
+    {file = "checkdigit-0.5.0-py3-none-any.whl", hash = "sha256:cc76a20005a1cedfaf8d3358d2a970788e994b16ccf7fbe2624f1a043b4a07cf"},
+    {file = "checkdigit-0.5.0.tar.gz", hash = "sha256:fe493397f2b95e4e726573a5a70b200f23b270e6d89c21847dea22024fe970e2"},
+]
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
@@ -1027,4 +1038,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.5"
-content-hash = "16c9c35a7e9c62d5474c2d99c818efa2519a063f7d84cb34cbd08a4716ac930b"
+content-hash = "3aba8a732948e60cc3a7d63d22d9433fcd4856b0247245ee981d021b745956fc"

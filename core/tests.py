@@ -1,3 +1,4 @@
+from datetime import date
 from pprint import pprint
 
 from django.contrib.admin.sites import AdminSite
@@ -32,6 +33,7 @@ class CoreTestCase(TestCase):
         (ValidationError, {'email': 'invalidmail'}),
         (False, {'email': 'test02@example.com', 'username': "User_42"}),
         (ValidationError, {'email': 'test02@example.com', 'username': "UserWithSameEmail"}),  # repeat email
+        (ValidationError, {'email': 'test03@example.com', 'username': "User Вася"}),
     ]
 
     def setUp(self):
@@ -77,15 +79,27 @@ class CoreTestCase(TestCase):
 
         # create profile
 
-        kwargs = {'first_name': "John", 'last_name': "Smith"}
-        profile = Profile(**kwargs)
-        profile.full_clean()
-        profile.save()
+        kwargs_list = [
+                {'first_name': "John", 'last_name': "Smith", "date_of_birth": date(1997, 1, 14)},
+                {'first_name': "Ivan", 'last_name': "Smith", "date_of_birth": date(1968, 12, 14)},
+                {'first_name': "Иван", 'middle_name': "Иванович",
+                 'last_name': "Смит", "date_of_birth": date(1968, 5, 20)},
+            ]
+        for kwargs in kwargs_list:
+            profile = Profile(**kwargs)
+            profile.full_clean()
+            profile.save()
+            print(f"--\nprofile: {profile.get_full_name()} {profile.date_of_birth}")
+            chancode = profile.make_chancode()
+            print(f"profile id: {chancode.format()}"
+                  f" decode: {chancode.decode_year_offset(chancode.encode()[-2:])}")
+            self.assertTrue(chancode.validate(chancode.format()))
+            print("chancode validated")
+
         profile.club = club
         profile.owner = CoreUser.objects.get(email=self.VALID_USER_EMAIL)
         profile.full_clean()
         profile.save()
-        print(f"profile id: {profile.make_profile_id()}")
 
     def test_admin_core(self):
         print("\n --- Testing core admin")
