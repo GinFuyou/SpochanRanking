@@ -65,7 +65,7 @@ class CoreUserAdmin(UserAdmin):
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['get_full_name', 'last_name', 'first_name', 'club', 'date_of_birth', 'chancode_format']
     readonly_fields = ("html_profile_qr", )
-    fields = ('first_name', 'last_name', 'date_of_birth', 'html_profile_qr')
+    fields = ('first_name', 'last_name', 'date_of_birth', 'html_profile_qr', 'chancode')
     autocomplete_fields = ('club', 'owner')
     search_fields = ('first_name', 'last_name', 'middle_name', 'owner__email')
     list_filter = ('club', )

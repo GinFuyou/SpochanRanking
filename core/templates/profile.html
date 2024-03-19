@@ -1,0 +1,41 @@
+{% extends "z-frame.html" %}
+{% load static %}
+
+{% block main %}
+    <h1> Profile: {{ profile.get_full_name }} </h1>
+    <table>
+        <tr>
+            <td>First Name</td>
+            <td>{{ profile.first_name }}</td>
+        </tr>
+        <tr>
+            <td>Middle Name</td>
+            <td>{{ profile.middle_name }}</td>
+        </tr>
+        <tr>
+            <td>Last Name</td>
+            <td>{{ profile.last_name }}</td>
+        </tr>
+        <tr>
+            <td>Date of Birth</td>
+            <td>{{ profile.date_of_birth }}</td>
+        </tr>
+        <tr>
+            <td>Club</td>
+            <td>{{ profile.club }}</td>
+        </tr>
+    </table>
+    <div>
+        <h3>Certifications</h3>
+        <ul>
+        {% for cert in profile.sportcertificationrecord_set.all %}
+        <li>{{ cert.discipline }}: {{ cert.get_level_display }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    <div>
+        <h3>Profile QR-code</h3>
+        <div>{{ profile.html_profile_qr }}</div>
+    </div>
+
+{% endblock main %}

@@ -13,7 +13,7 @@ class AbstractCertificationRecord(models.Model):
     class Meta:
         abstract = True
 
-    owner = models.OneToOneField("core.Profile", on_delete=models.PROTECT)
+    owner = models.ForeignKey("core.Profile", on_delete=models.PROTECT)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     # updated_by = models.ForeignKey(settings.AUTH_USER_MODEL)

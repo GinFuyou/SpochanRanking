@@ -180,7 +180,7 @@ class Profile(models.Model):
     html_profile_qr.short_description = "Profile QR"
 
     def get_absolute_url(self):
-        return reverse('admin:core_profile_change', kwargs={'object_id': self.pk})
+        return reverse('core:profile', kwargs={'chancode': self.chancode})
 
     def get_full_name(self):
         """

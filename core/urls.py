@@ -6,4 +6,5 @@ app_name = 'core'
 
 urlpatterns = [
     path('', views.index, name=views.index.pattern_name),
+    path('profile/<str:chancode>/', views.profile, name="profile")
 ]
